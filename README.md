@@ -19,7 +19,7 @@ This work is licensed under a
  ## Lecture Slides
 
 
- [**Lecture 1: R Intro**]((https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/01-R-Intro/01-R-Intro.html))
+ [**Lecture 1: R Intro**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/01-R-Intro/01-R-Intro.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/01-R-Intro/01-R-Intro.pdf))
 
  * Course Introduction
