@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lecture 2: R Markdown, Version Control with Git(Hub), and Other Productivity Tools</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="James Sears*   AFRE 891 SS 24   Michigan State University" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="msu-default.css" type="text/css" />
+    <link rel="stylesheet" href="msu-metropolis.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Lecture 2: R Markdown, Version Control with Git(Hub), and Other Productivity Tools
+]
+.author[
+### James Sears* <br> AFRE 891 SS 24 <br> Michigan State University
+]
+.date[
+### .small[<br> *Parts of these slides are adapted from <a href="https://github.com/msu-econ-data-analytics/course-materials">“Advanced Data Analytics”</a> by Nick Hagerty and <a href="https://github.com/uo-ec607/lectures">“Data Science for Economists”</a> by Grant McDermott.]
+]
+
+---
+
+
+&lt;style type="text/css"&gt;
+# CSS for including pauses in printed PDF output (see bottom of lecture)
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+.remark-code-line {
+  font-size: 95%;
+}
+.small {
+  font-size: 75%;
+}
+.scroll-output-full {
+  height: 90%;
+  overflow-y: scroll;
+}
+.scroll-output-75 {
+  height: 75%;
+  overflow-y: scroll;
+}
+&lt;/style&gt;
+
+
+# Table of Contents
+
+1. [Prologue](#prologue)
+
+1. [R Markdown](#markdown)
+
+1. [Version Control](#control)
+
+1. [Git(Hub) + RStudio](#gitr)
+
+1. [GitHub Desktop](#desktop)
+
+1. [Other Tips and Productivity Tools](#tips)
+
+---
+class: inverse, middle
+name: prologue
+
+# Prologue
+
+&lt;!-- software installations, checking registrations--&gt;
+
+---
+# Prologue
+
+Before we dive in, let's double check that we all have
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg> Installed [.hi-orange[R]](https://www.r-project.org/).
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg> Installed [.hi-orange[RStudio]](https://www.rstudio.com/products/rstudio/download/preview/).
+	
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg>  Signed up for an account on [.hi-orange[Github]](https://github.com/)
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg> Installed [.hi-orange[Git]](https://happygitwithr.com/install-git) and [.hi-orange[Github Desktop]](https://desktop.github.com/)
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg>  Log into your Github account on Github Desktop
+
+---
+class: inverse, middle
+name: markdown
+
+# R Markdown
+
+---
+#R Markdown
+
+Before we dive into version control, let's chat about .hi-medgrn[R Markdown].
+
+--
+
+R Markdown is a document type that allows for integration of R code and output into a Markdown document. 
+
+.hi-blue[Resources:]
+- Website: [.hi-orange[rmarkdown.rstudio.com]](https://rmarkdown.rstudio.com)
+- [.hi-orange[R Markdown Cheatsheet]](https://github.com/rstudio/cheatsheets/raw/main/rmarkdown-2.0.pdf)
+- Book: [.hi-orange[R Markdown: The Definitive Guide]](https://bookdown.org/yihui/rmarkdown) (Yihui Xie, JJ Allaire, and Garrett Grolemund)
+
+---
+#R Markdown
+
+Before we dive into version control, let's chat about .hi-medgrn[R Markdown].
+
+
+R Markdown is a document type that allows for integration of R code and output into a Markdown document. 
+
+.hi-pink[Other points:]
+- We'll be completing assignments using R Markdown.
+- FWIW, my lecture slides and notes are all written in R Markdown too. (E.g. This slide deck is built using the [.hi-orange[xaringan]](https://github.com/yihui/xaringan/wiki) package with the metropolis theme.)
+
+
+---
+# R Markdown: Getting Started
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg> Installed [R](https://www.r-project.org/).
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M211.8 339.8C200.9 350.7 183.1 350.7 172.2 339.8L108.2 275.8C97.27 264.9 97.27 247.1 108.2 236.2C119.1 225.3 136.9 225.3 147.8 236.2L192 280.4L300.2 172.2C311.1 161.3 328.9 161.3 339.8 172.2C350.7 183.1 350.7 200.9 339.8 211.8L211.8 339.8zM0 96C0 60.65 28.65 32 64 32H384C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96zM48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80H64C55.16 80 48 87.16 48 96z"/></svg> Installed [RStudio](https://www.rstudio.com/products/rstudio/download/preview/).
+	
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM384 80H64C55.16 80 48 87.16 48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80z"/></svg>  Add the `rmarkdown` package
+
+
+
+```r
+install.packages("rmarkdown")
+```
+
+<svg aria-hidden="true" role="img" viewBox="0 0 448 512" style="height:1em;width:0.88em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM384 80H64C55.16 80 48 87.16 48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80z"/></svg> Install LaTeX
+  * If just for this, can use [.hi-orange[TinyTex]](https://yihui.name/tinytex/)
+
+
+```r
+# Install only if you don't have LaTeX already
+install.packages("tinytex")
+tinytex::install_tinytex()
+```
+
+---
+# R Markdown: Creating a New .Rmd File
+
+&lt;img src="images/rmd_add.png" width = "100%"/&gt; 
+
+---
+# R Markdown: Creating a New .Rmd File
+
+&lt;img src="images/rmd_add2.png" width = "100%"/&gt; 
+
+---
+# R Markdown: Creating a New .Rmd File
+
+&lt;img src="images/rmd_add3.png" width = "120%"/&gt; 
+
+
+---
+# R Markdown Components
+
+R Markdown combines
+  1. .hi-purple[Markdown:] lightweight markup language
+  1. .hi-pink[LaTeX:] typesetting for math
+  1. .hi-medgrn[R:] include code and generate output
+  
+--
+
+&lt;br&gt;
+&lt;br&gt; 
+Let's do some practice: .hi-slate[open a new .Rmd file] and try adding content as we go
+
+---
+# Markdown
+
+.hi-purple[Markdown] allows for formatting text in a lightweight way
+
+I highly recommend the handy [.hi-orange[Markdown Guide]](https://www.markdownguide.org/) for more details
+
+---
+# Markdown: Heading
+
+.hi-blue[Headings] emphasize text and add chunks to your script
+
+Largest headingwith one leading \#  (slide title above) 
+
+## Second Largest (\#\#)
+### Third Largest (\#\#\#)
+#### Getting Smaller... (\#\#\#\#)
+Normal Text for comparison
+
+
+---
+# Markdown: Text Format
+
+**Bold text** with \*\*your text\*\*
+
+*Italicize* with \*single asterisks\*
+
+Add `code text` with  grave accents (the back tick symbol)
+  * &amp;#96;
+  * The shift output of the tilde key `~` on keyboard
+
+End a line with two spaces  to start a new paragraph 
+  * or leave a line space between sentences
+
+Can also start a new line with backslash (\\)
+
+
+
+---
+# Markdown: Text Format
+
+Add superscripts&lt;sup&gt;2&lt;/sup&gt; with ^carets^
+
+Add ~~strikethroughs~~ with \~tildes\~
+
+Add a line break (horizontal rule) 
+
+***
+
+with \*\*\*
+
+---
+# Markdown: Text Format
+
+Draw .hi-pink[tables] using | and -
+
+
+| Col A | Col B | Col C|
+|---|---|---|
+| This | is | a |
+| Table | | wow|
+
+
+
+---
+# Markdown: Lists
+
+Add an .hi-purple[ordered list] with .hi-purple[1.]
+
+  1. First Item
+  1. Second Item
+  1. No need to change the number - keep using 1. It will automatically update.
+  
+--
+
+Add an .hi-medgrn[unordered list] with .hi-medgrn[\* or \-]
+
+  * A thing
+  * Another related thing
+    - Indent to nest
+      1. Can mix ordered and unordered
+
+---
+# Markdown: Inputs
+
+Add a [link](https://www.markdownguide.org/cheat-sheet/) with \[\]()
+  * \[text label\](URL)
+  * Add direct link with &amp;#60;link&amp;#62;   &lt;https://www.markdownguide.org&gt;
+  
+--
+
+Add an image with !\[\]()
+  * !\[alt text](URL)
+
+
+.hi-medgrn[practice] by adding `images/smile.png`:
+  
+  ![test with one of our images](images/smile.png)
+  
+---
+# R Markdown: LaTeX
+
+Another advantage of R Markdown is that it integrates ![latex](images/latex.png) functionality for typesetting math.
+
+
+
+--
+
+Add an .hi-purple[inline equation] with &amp;#36;TeX&amp;#36;
+
+`\(Var(X) = \sum\limits_{i=1}^n \frac{(x_i - \bar{x})^2}{n} ~~~~ ~~~ Y_{it} = \beta_0 + \beta_1 X_{it} + \epsilon_{it}\)`
+
+--
+
+Add multiple rows of LaTeX with 
+
+&amp;#36;&amp;#36; 
+
+LaTeX lines here
+
+&amp;#36;&amp;#36;
+
+Use the [.hi-orange[standard LaTeX commands]](https://kapeli.com/cheat_sheets/LaTeX_Math_Symbols.docset/Contents/Resources/Documents/index) for symbols/characters
+
+
+---
+# R Markdown: R Code
+
+R code is primarily executed with .hi-blue[code chunks]
+
+--
+
+Add a chunk with 
+  * `Cmd + Option + I (Ctrl + Alt + I on PC)`
+  * The `Insert` button in the UI
+  * Manually type 
+
+![Insert button location](images/insert.png)
+---
+# R Markdown: R Code Chunks
+
+
+&lt;img src="images/chunk.png" width = "120%"/&gt; 
+
+
+
+.hi-blue[Code chunks] allow us to add as many lines of code as we want
+  * Output will appear underneath after executing the full chunk
+  * Can customize whether it runs, how output is displayed
+  * Can run manually 
+    * Line by line with `Cmd/Ctrl + Enter`
+    * Entire chunk with `Run Entire Chunk` button
+
+---
+# R Markdown: R Code Chunk Options
+
+You can .hi-blue[add chunk options] in brackets after `r` and separated by commas.
+
+Some commonly-used options include:
+  * .hi-slate[Chunk label] (`ex_chunk`)
+  * `include = FALSE` will run the chunk but hide it from the final document
+  * `eval = FALSE` will display code without evaluating it
+  * `results = 'hide'` runs code but hides output from the final document 
+  
+&lt;img src="images/chunk_opts.png" width = "80%"/&gt; 
+
+  
+---
+# R Markdown: R Code Chunk Options
+
+You can .hi-blue[add chunk options] after `r` and separated by commas.
+
+Some commonly-used options include:
+  * `echo = FALSE` runs the code but hides the chunk from the final document 
+  * `error = FALSE` (`warning: FALSE`) will hide error (warning) messages generated by the code
+  * LOTS of options for output figures: figure size (fig.width, fig.height, fig.dim), output document scale (out.width, out.height), alignment (fig.align), caption (fig.cap)
+  
+  Learn more [.hi-orange[about chunk options here]](http://yihui.name/knitr/options)
+  
+---
+# R Markdown: R Code
+
+You can call R objects from earlier chunks .hi-medgrn[inline] with 
+
+![backtick](images/backtick.png) r  ![backtick](images/backtick.png)
+
+
+
+
+```r
+four = 2+2
+```
+
+This can output in line with text: 2 + 2 = 4
+
+
+---
+class: inverse, middle
+
+
+# R Markdown File Organization
+
+
+---
+# 1. Header
+.pull-left[
+RStudio automatically builds the R Markdown file from a template, which begins with a .hi-medgrn[header]
+  * Title
+  * Author
+  * Date
+  * Output Format
+    * Main options&lt;sup&gt;1&lt;/sup&gt;: HTML (`html_document`), PDF (`pdf_document`), LaTeX (`latex_document`), or Word (`word_document`)
+]
+.pull-right[
+
+&lt;img src="images/header.png" width = "120%"/&gt; 
+
+]
+
+.footnote[1: See [.hi-orange[CH 3 of "R Markdown: The Definitive Guide" for more on how to customize output formats]](https://bookdown.org/yihui/rmarkdown/documents.html)]
+
+---
+# 2. R Setup
+
+By default, RStudio adds a .hi-blue[setup] code chunk next.
+
+&lt;img src="images/r_setup.png" width = "120%"/&gt; 
+
+  * Can set global options
+  * Useful as your preamble
+  * For [.hi-orange[R Notebooks]](https://bookdown.org/yihui/rmarkdown/notebook.html), this will automatically be run and is the only place where you can change your working directory 
+
+
+---
+# 3. Contents
+
+From here on you can build the report/notebook as needed for the task.
+  * Add any writing and outside graphics or [.hi-orange[bibTeX citations]](https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html)
+  * Add code chunks to carry out desired analysis
+  * Employ sections and formatting to structure the document as desired
+  
+---
+# Compiling/Knitting
+
+When you are ready to compile your final document, use the `Knit` button or ` Ctrl/Cmd + Shift + K`
+
+&lt;img src="images/rmd_knit.png" width = "100%"/&gt; 
+
+---
+# R Markdown: Knit to Compile Output (HTML, PDF)
+
+&lt;img src="images/rmd_knit2.png" width = "120%"/&gt; 
+
+
+---
+class: inverse, middle
+
+# Markdown Practice!
+
+---
+# Markdown Practice
+
+  1. Create a new R Markdown file named "R-Markdown-Ex.RMD"
+  1. In the setup chunk, load the `dslabs` and `tidyverse` packages
+    * Use the `data()` function to read in the `divorce_margarine` dataset
+  1. Add a header labeled "Correlation vs. Causation" and a text explanation below for why we often want to differentiate between the two
+  1. Add a code chunk with the label `plot`
+    * Type the following code:
+    ```
+    ggplot(divorce_margarine) +
+    geom_point(aes(x = margarine_consumption_per_capita, 
+                   y = divorce_rate_maine)) +
+    labs(title = "Relationship between Margarine Consumption and 
+                  Divorce Rates in Maine",
+         subtitle = "2000-2009",
+         x = "Margarine Consumption per Capita",
+        y = "Divorce Rate")`
+     ```     
+  1. Knit and save a PDF/HTML copy of the file to the "output" folder
+  
+  
+---
+class: inverse, middle
+name: control
+
+# Version Control
+
+&lt;!-- basics of version control, why do it, different version --&gt;
+
+---
+# Why Use Version Control
+
+&lt;img src = "images/phd052810s.gif"  height = "100%"/&gt; 
+
+---
+# Goals of Version Control
+
+While building project folders with the above naming conventions is *fun*, a good .hi-medgrn[version control system] can solve this problem.
+
+  * Save each set of changes sequentially
+  * Keep track of different versions of a file
+  * Merge changes from multiple versions/sources
+
+---
+
+# Git(Hub) Solves this Problem
+
+### Git
+
+- .hi-medgrn[Git] is a .hi-medgrn[distributed version control system]
+  - Each team member has a .hi-blue[local copy] of files on their computer
+- Imagine if Dropbox and the "Track changes" feature in MS Word had a baby. Git would be that baby.
+- In fact, it's even better than that because Git is optimised for the things that economists and data scientists spend a lot of time working on (e.g. code).
+- There is a learning curve, but I promise you it's worth it.
+
+---
+
+# Git(Hub) Solves this Problem
+
+### GitHub
+
+- It's important to realise that .hi-medgrn[Git] and .hi-purple[GitHub] are distinct things.
+- .hi-purple[GitHub] is an .hi-purple[online hosting platform] that provides an array of services built on top of the Git system. (Similar platforms include Bitbucket and GitLab.)
+- Just like we don't *need* Rstudio to run R code, we don't *need* GitHub to use Git... But it will make our lives so much easier.
+
+---
+
+# Git(Hub) for Scientific Research
+
+.hi-slate[From software development...]
+
+- Git and GitHub's role in global software development is not in question.
+- There's a high probability that your favourite app, program or package is built using Git-based tools. (RStudio is a case in point.)
+
+.hi-slate[... to scientific research]
+
+- Benefits of VC and collaboration tools aside, Git(Hub) helps to operationalise the ideals of open science and reproducibility.&lt;sup&gt;2&lt;/sup&gt;
+- Journals have increasingly strict requirements regarding reproducibility and data access. GH makes this easy (DOI integration, off-the-shelf licenses, etc.)
+- I host [.hi-orange[teaching materials]](https://github.com/searsjm) on GH. I even use it to host and maintain my [.hi-orange[website]](https://github.com/searsjm/searsjm.github.io).
+.footnote[2: [.hi-orange[Democratic databases: Science on GitHub (Nature)]](https://www.nature.com/news/democratic-databases-science-on-github-1.20719) (Perkel, 2016).]
+
+  
+---
+class: inverse, middle
+name:gitr
+
+# Git(Hub) and RStudio 
+
+---
+
+# Seamless Integration
+
+One of the (many) great features of RStudio is how well it integrates version control into your everyday workflow.
+- Even though Git is a completely separate program to R, they feel like part of the same "thing" in RStudio.
+- This next section is about learning the basic Git(Hub) commands and the recipe for successful project integration with RStudio.
+
+--
+
+I also want to bookmark a general point that we'll revisit many times during this course: 
+- The tools that we're using all form part of a coherent .hi-medgrn[data science ecosystem].
+- Greatly reduces the cognitive overhead ("aggregation") associated with traditional workflows, where you have to juggle multiple programs and languages at the same time.
+
+---
+
+# Link a GitHub Repo to an RStudio Project 
+
+The starting point for our workflow is to link a GitHub repository (i.e. "repo") to an RStudio Project. Here are the steps we're going to follow:
+
+1. Create the repo on GitHub and initialize with a README.
+2. Copy the HTTPS/SSH link (the green "Clone or Download" button).&lt;sup&gt;1&lt;/sup&gt;
+3. Open up RStudio.
+4. Navigate to **File -&gt; New Project -&gt; Version Control -&gt; Git**.
+5. Paste your copied link into the "Repository URL:" box.
+6. Choose the project path ("Create project as subdirectory of:") and click **Create Project**.
+
+&lt;!-- .footnote[&lt;sup&gt;1&lt;/sup&gt; It's easiest to start with HTTPS, but &lt;a href="http://happygitwithr.com/ssh-keys.html#ssh-keys" target="_blank"&gt;SSH&lt;/a&gt; is advised for more advanced users.] --&gt;
+
+--
+
+Now, I want you to practice by these steps by creating your own repo on GitHub — call it "test" — and cloning it via an RStudio Project.
+
+---
+# Create a Repository on GitHub (Repo)
+
+&lt;img src="images/create_repo/create_repo1.png" height=100%&gt;
+
+---
+# Create a Repository on GitHub (Repo)
+
+&lt;img src="images/create_repo/create_repo2.png" width= "550"&gt;
+
+---
+# Create a Repository on GitHub (Repo)
+
+![create repo](images/create_repo/create_repo3.png)
+
+---
+#  Create a Repository on GitHub (Repo)
+
+&lt;img src="images/create_repo/create_repo4.png" height=100%&gt;
+
+---
+# Copy Repo Link
+
+&lt;img src="images/create_repo/add_rstudio1.png" height=100%&gt;
+
+
+---
+# Add Repo into RStudio
+
+&lt;img src="images/create_repo/add_rstudio2.png" height=100%&gt;
+
+
+
+---
+# Add Repo into RStudio
+
+&lt;img src="images/create_repo/add_rstudio3.png" height=100%&gt;
+
+
+
+---
+# Add Repo into RStudio
+
+&lt;img src="images/create_repo/add_rstudio4.png" height=100%&gt;
+
+---
+# Making Local Changes
+
+Look at the .hi-medgrn[top-right panel] in your RStudio IDE. Do you see the .hi-blue[Git] tab? 
+- Click on it. 
+- There should already be some files in there, which we'll ignore for the moment.&lt;sup&gt;1&lt;/sup&gt;
+
+Now open up the README file (see the "Files" tab in the bottom-right panel).
+- Add some text and save the README.
+- Do you see any changes in the .hi-blue[Git] panel? Good. (Raise your hand if not.)
+
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; They're important, but not for the purposes of this section.]
+
+---
+# Making Local Changes
+
+&lt;img src="images/local_change/modify_local1.png" height=100%&gt;
+
+---
+# Making Local Changes
+
+&lt;img src="images/local_change/modify_local2.png" height=100%&gt;
+
+
+---
+
+# Main Git operations
+
+Now that you've .hi-purple[cloned] your first repo and made some local changes, it's time to learn the .hi-medgrn[four main Git operations].
+
+1. .hi-slate[Stage] (or "add")
+  - Tell Git that you want to add changes to the repo history (file edits, additions, deletions, etc.)
+2. .hi-slate[Commit]
+  - Tell Git that, yes, you are sure these changes should be part of the repo history.
+3. .hi-slate[Pull]
+  - Get any new changes made on the GitHub repo (i.e. the upstream remote), either by your collaborators or you on another machine.
+4. .hi-slate[Push]
+  - Push any (committed) local changes to the GitHub repo
+
+---
+
+# Main Git operations
+
+1. .hi-slate[Stage] (or "add")
+  - Tell Git that you want to add changes to the repo history (file edits, additions, deletions, etc.)
+2. .hi-slate[Commit]
+  - Tell Git that, yes, you are sure these changes should be part of the repo history.
+3. .hi-slate[Pull]
+  - Get any new changes made on the GitHub repo (i.e. the upstream remote), either by your collaborators or you on another machine.
+4. .hi-slate[Push]
+  - Push any (committed) local changes to the GitHub repo
+
+For the moment, it will be useful to group the first two operations and last two operations together. (They are often combined in practice too, although you'll soon get a sense of when and why they should be split up.)
+
+
+---
+# Stage and Commit
+.center[
+&lt;img src="images/stage_commit/stage_commit1.png"&gt;
+]
+---
+# Stage and Commit
+.center[
+&lt;img src="images/stage_commit/stage_commit2.png"&gt;
+]
+---
+# Stage and Commit
+.center[
+&lt;img src="images/stage_commit/stage_commit3.png"&gt;
+]
+---
+# Pull
+.center[
+&lt;img src="images/push_pull/pull.png"&gt;
+]
+---
+# Push
+.center[
+&lt;img src="images/push_pull/push.png"&gt;
+]
+---
+# Sign RStudio into Github
+.center[
+&lt;img src="images/push_pull/push_signin.png" height="550"&gt;
+]
+---
+# Sign RStudio into Github
+.center[
+&lt;img src="images/push_pull/push_signin2.png" height= "550"&gt;
+]
+---
+# Changes Now Visible on Github
+.center[
+&lt;img src="images/local_change/github_changes.png" height=100%&gt;
+]
+---
+# Changes Now Visible Locally Too
+.center[
+&lt;img src="images/local_change/local_changes.png" height=100%&gt;
+]
+
+
+---
+
+# Recap
+
+Here's a step-by-step summary of what we just did.
+- Made same changes to a file and saved them locally.
+- .hi-blue[Staged] these local changes.
+- .hi-medgrn[Committed] these local changes to our Git history with a helpful message.
+- .hi-purple[Pulled] from the GitHub repo just in case anyone else made changes too (not expected here, but good practice).
+- .hi-pink[Pushed] our changes to the GitHub repo.
+
+Aside: Always pull from the upstream repo *before* you push any changes. Seriously, do this even on solo projects; making it a habit will save you headaches down the road.
+
+
+---
+
+# Recap
+
+Here's a step-by-step summary of what we just did.
+- Made same changes to a file and saved them locally.
+- .hi-blue[Staged] these local changes.
+- .hi-medgrn[Committed] these local changes to our Git history with a helpful message.
+- .hi-purple[Pulled] from the GitHub repo just in case anyone else made changes too (not expected here, but good practice).
+- .hi-pink[Pushed] our changes to the GitHub repo.
+
+
+PS — You were likely challenged for your GitHub credentials at some point. Learn how to cache these [here](https://happygitwithr.com/credential-caching.html).
+
+---
+
+# Why this Workflow: GitHub
+
+Creating the repo on GitHub first means that it will .hi-medgrn[always be "upstream"] of your (and any other) local copies.
+- In effect, this allows GitHub to act as the .hi-purple[central node] in the distributed VC network.
+- Especially valuable when you are collaborating on a project with others — more on this later — but also has advantages when you are working alone.
+- If you would like to move an existing project to GitHub, my advice is still to create an empty repo there first, clone it locally, and then copy all your files across.
+
+
+---
+
+# Why this Workflow: RStudio
+
+.hi-blue[RStudio Projects] are great. 
+- They interact seamlessly with Git(Hub), as we've just seen. 
+- They also solve absolute vs. relative path problems, since the .Rproj file acts as an anchor point for all other files in the repo.&lt;sup&gt;1&lt;/sup&gt;
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Calling files from their full `YourComputer/YourName/Documents/Special-Subfolder/etc` paths in your scripts is the enemy of reproducibility!]
+
+
+---
+class: inverse, middle
+name: desktop
+
+# GitHub Desktop
+
+---
+# Version Control with GitHub Desktop
+
+Although GitHub integration with RStudio has lots of functionality, there are times where we want to keep track of files and projects .hi-medgrn[outside of RStudio].
+
+This is where .hi-purple[GitHub Desktop] comes in.
+
+---
+# Github Desktop Workflow
+
+With GitHub Desktop, we can maintain a similar workflow
+
+.center[
+&lt;img src="images/workflow1.png" height=100%&gt;
+]
+
+---
+# Github Desktop Workflow
+
+With GitHub Desktop, we can maintain a similar workflow
+
+1. Create a new repository on GitHub.com
+1. .hi-blue[Clone] the repository to your local machine
+1. Do some work (i.e. edit the repository)
+1. .hi-medgrn[Commit] changes to the repository
+1. .hi-purple[Push] your commit to GitHub
+
+---
+# Clone Repository 
+
+.center[
+&lt;img src="images/clone_desktop/clone_desktop1.png" height=100%&gt;
+]
+
+---
+# Clone Repository 
+
+.center[
+&lt;img src="images/clone_desktop/clone_desktop2.png" height=100%&gt;
+]
+
+---
+# Clone Repository 
+
+.center[
+&lt;img src="images/clone_desktop/clone_desktop3.png" height=100%&gt;
+]
+
+---
+# Fetch Origin + Pull to Stay Current
+
+.center[
+&lt;img src="images/clone_desktop/pull_desktop.png" height=100%&gt;
+]
+
+---
+# Make Local Changes to Repo
+Save a new .Rmd file named `repo-test` into the "test" folder
+  * GitHub Desktop automatically stages the changes
+
+.center[
+&lt;img src="images/clone_desktop/stage_desktop.png" height=100%&gt;
+]
+
+---
+# Commit Changes
+Add commit title and description, then commit to GitHub
+
+.center[
+&lt;img src="images/clone_desktop/commit_desktop.png" height=100%&gt;
+]
+
+---
+# Push Changes to GitHub Desktop
+
+.center[
+&lt;img src="images/clone_desktop/push_desktop.png" height=100%&gt;
+]
+
+---
+# Repo now Matches Local Version
+
+.center[
+&lt;img src="images/clone_desktop/match_desktop.png" height=100%&gt;
+]
+
+
+---
+class: inverse, middle
+name: tips
+
+# Other Tips and Productivity Tools
+
+---
+# Productivity Miscellanea
+
+What follows are miscellaneous things that I find .hi-purple[improve my productivity]
+
+  * .hi-medgrn[Synced Cloud Storage] (SpartanDrive or Dropbox/Box)
+  * .hi-blue[Overleaf] for LaTeX collaboration
+  * .hi-pink[Connected Papers] for literature networks
+  
+  
+---
+# Synced Cloud Storage and OneDrive
+
+.hi-medgrn[Synced Cloud Storage] is hugely beneficial if you work across .hi-pink[multiple computers] or .hi-blue[with many collaborators].
+
+  * Make sure each computer has the most up-to-date version of all your files
+  * Renders flash drives almost entirely obselete!
+
+---
+# Synced Cloud Storage and OneDrive
+
+One easy way to do this: .hi-purple[SpartanDrive/OneDrive]
+
+All faculty + staff get .hi-blue[5 TB of free storage] on [.hi-orange[SpartanDrive (MSU's version of OneDrive)]](https://tdx.msu.edu/TDClient/32/Portal/KB/ArticleDet?ID=1169#ANCHOR_Topic%20Two)
+
+
+.pull-left[
+
+## Pros
+  * Free
+  * Syncable desktop apps
+  * Part of the MSU Office365 ecosystem
+]
+.pull-right[
+
+## Cons
+
+  * Part of the MSU Office365 ecosystem
+  * Limited storage (5TB, 250gb max filesize)
+  * Sometimes finicky
+]
+
+
+---
+# Synced Cloud Storage
+
+
+Alternatives to SpartanDrive:
+
+  * .hi-blue[Dropbox]: 2GB free ($10/mo for 2TB)
+  * .hi-pink[Box:] 10GB free ($10/mo for 100GB)
+
+--
+
+Ultimate choice of platform may depend on coauthors + your current choice, but it's a good idea to .hi-purple[download the desktop app] to keep your files synced + backed up!
+  * Also gives basic version control
+
+---
+# Overleaf
+
+If you typeset using LaTeX, [.hi-orange[Overleaf]](https://www.overleaf.com/) streamlines access and collaboration
+
+.less-right[
+.hi-blue[Free Version:] remotely host all files, access for you + 1 collaborator
+  
+.hi-medgrn[Paid ($7.40/mo):] track changes + full document history, Git(hub) + Dropbox integration,  up to 6 collaborators
+]
+
+  
+
+.more-left[
+&lt;img src="images/overleaf.png" width = "120%"/&gt; 
+
+]
+
+---
+# Connected Papers 
+
+.more-left[
+&lt;img src="images/connectedpapers.png" width = "110%"/&gt; 
+]
+.less-right[
+  * Graphical representation of paper networks
+  * Visualize literature as directed graph
+  * 5 free per month ([.hi-orange[unlimited for $6/mo]](https://www.connectedpapers.com/pricing))
+]
+
+---
+# Productivity Miscellanea
+
+.center[
+## Your Productivity Tips + Tricks?
+]
+---
+# Table of Contents
+
+1. [Prologue](#prologue)
+
+1. [R Markdown](#markdown)
+
+1. [Version Control](#control)
+
+1. [Git(Hub) + RStudio](#gitr)
+
+1. [GitHub Desktop](#desktop)
+
+1. [Other Tips and Productivity Tools](#tips)
+
+
+
+
+
+# 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"fig_caption": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
