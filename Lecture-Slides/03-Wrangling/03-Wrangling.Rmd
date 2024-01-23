@@ -8,7 +8,7 @@ output:
   xaringan::moon_reader:
     css: [msu-default.css, msu-metropolis.css, metropolis-fonts]
     lib_dir: libs
-    self_contained: false
+    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -424,7 +424,7 @@ starwars %>%
 
 ---
 # Removing Missing Data
-To remove missing observations, simply use negation: `filter(is.na(height))`
+To remove missing observations, simply use negation: `filter(!is.na(height))`
 
 Or use the convenient `drop_na()` verb:
 
@@ -532,11 +532,11 @@ starwars %>%
 
 |  |  |
 |---| ---|
-| `start_with("D")` | names starting with "D" |
+| `starts_with("D")` | names starting with "D" |
 | `ends_with("_hh")` | names ending with "_hh"|
 | `contains("d")` | names containing "d" |
 | ` matches("^[a-d]")` | names matching regular expression "^[a-d]" |
-| `num_range(x, 1:10)` | names following patten `x1`, `x2`, ..., `x10` |
+| `num_range(x, 1:10)` | names following pattern `x1`, `x2`, ..., `x10` |
 | `all_of(vars)`/`any_of(vars)` | matches names stored in character vector `vars` |
 | `last_col()` | further right column |
 | `where(is.numeric)` | all variables where `is.numeric()` returns`TRUE` |
