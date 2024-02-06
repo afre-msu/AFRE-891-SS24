@@ -465,8 +465,19 @@ A variable can be .hi-slate[both a primary key *and* a foreign key].
 
 Once you think you know the primary key, .hi-medgrn[verify it]. Here's one way to do that:
 ```{r}
-planes %>% 
-  count(tailnum) %>%
+
+planes_dup <- rbind(planes, planes[1:100,]) %>% arrange(tailnum) %>% mutate(n = row_number())
+
+planes_dist <- distinct(planes_dup, .keep_all = T)
+
+planes_dist2 <- group_by(planes_dup, tailnum) %>%
+  mutate(count = row_number()) %>%
+  filter(count == 1) %>%
+  ungroup()
+
+View(flights)
+flights %>% 
+  count(month, day, dep_time, carrier, flight, tailnum) %>%
   filter(n > 1)
 ```
 
@@ -728,8 +739,7 @@ Start by replacing 4 punctuation marks with spaces (note we have to .hi-slate[es
 heights2 <- reported_heights %>%
   mutate(height_clean = str_replace_all(height, "'", " "), 
   height_clean = str_replace_all(height_clean, ",", " "),
-  height_clean = str_replace_all(height_clean, "\"", " "),
-  height_clean = str_replace_all(height_clean, ",", " "))
+  height_clean = str_replace_all(height_clean, "\"", " "))
 heights2$height_clean
 ```
 
