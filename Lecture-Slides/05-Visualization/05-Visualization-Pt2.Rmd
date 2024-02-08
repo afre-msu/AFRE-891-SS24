@@ -117,7 +117,7 @@ pacman::p_load(RColorBrewer, viridis, Polychrome, broman)
 Additional packages if you want to replicate the theme/plot extensions:
 
 ```{r}
-pacman::p_load(ggtheme, showtext, gganimate, ggExtra)
+pacman::p_load(ggtheme, showtext, gganimate, gifski, ggExtra)
 ```
 
 ---
