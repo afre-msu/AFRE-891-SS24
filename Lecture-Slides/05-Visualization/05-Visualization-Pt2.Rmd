@@ -3,7 +3,7 @@ title: "Lecture 5: Data Visualization Part 2"
 author: "James Sears* <br> AFRE 891 SS 24 <br> Michigan State University"
 date: ".small[<br> *Parts of these slides are adapted from [“Advanced Data Analytics”](https://github.com/msu-econ-data-analytics/course-materials) by Nick Hagerty and [“Introduction to Data Science”](http://rafalab.dfci.harvard.edu/dsbook/r-basics.html) by Rafael A. Irizarry, used under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0).] "
 
-      
+
 output:
   xaringan::moon_reader:
     css: [msu-default.css, msu-metropolis.css, metropolis-fonts]
@@ -93,7 +93,7 @@ name: prologue
 # Prologue
 
 Packages we'll use for today's examples:
-  
+
 ```{r}
 pacman::p_load(dslabs, ggrepel, tidyverse)
 ```
@@ -162,7 +162,7 @@ To practice, let's load in a more complete version of the [.hi-dkorange[gapminde
 # run below line if you have gapminder package loaded
 #try(detach("package:gapminder", unload = TRUE))
 
-data(gapminder) 
+data(gapminder)
 ```
 
 ---
@@ -179,22 +179,22 @@ filter(gapminder, country == "United States") %>%
 
 
 ---
-  
+
 # Points Connected with a Line
-  
+
 ``` {r line1b, out.width = "70%"}
 filter(gapminder, country == "United States") %>%
   ggplot(aes(x = year, y = life_expectancy)) +
   geom_line(color = "blue") +
-  geom_point(color = "red") 
+  geom_point(color = "red")
 
 ```
 
 
 ---
-  
+
 # Layer Order: Lowest Layer on Top
-  
+
 
 ``` {r line1c, out.width = "70%"}
 filter(gapminder, country == "United States") %>%
@@ -206,9 +206,9 @@ filter(gapminder, country == "United States") %>%
 ```
 
 ---
-  
+
 # Modify Titles with *labs()*
-  
+
 
 ``` {r line2, out.width="58%"}
 filter(gapminder, country == "United States") %>%
@@ -222,9 +222,9 @@ filter(gapminder, country == "United States") %>%
 
 
 ---
-  
+
 # Change Axis Limits with *lims()*
-  
+
 ``` {r line3, out.width = "60%"}
 filter(gapminder, country == "United States") %>%
   ggplot() +
@@ -235,9 +235,9 @@ filter(gapminder, country == "United States") %>%
 
 
 ---
-  
+
 # Customize Axis Scales
-  
+
 Change limits/breaks/labels for a .hi-purple[specific axis] with `scale_x/y_type()` layers (`type` one of "discrete", "continuous", "date", or "manual")
 
 ``` {r line4a, out.width = "60%", eval = F}
@@ -261,7 +261,7 @@ filter(gapminder, country == "United States") %>%
 ---
 
 # Customize Axis Scales: The Chart
-  
+
 
 ``` {r line4a_eval, echo = F}
 pacman::p_load(lubridate)
@@ -284,13 +284,13 @@ filter(gapminder, country == "United States") %>%
 ---
 
 # Mappings: Multiple Series
-  
+
 Add a `linetype` or `color` aesthetic to add a separate line for each value of a categorical variable].
 
 --
-  
-What are trends in life expectancy for the G-7 countries? 
-  
+
+What are trends in life expectancy for the G-7 countries?
+
 ``` {r line4b, out.width = "60%", eval = F}
 g7 <- c("United States", "United Kingdom", "Germany", "Italy", "France", "Canada", "Japan")
 #filter to G-7 countries
@@ -298,16 +298,16 @@ filter(gapminder, country %in% g7) %>%
   ggplot() +
   geom_line(aes(x = year, y = life_expectancy,
                 linetype = country #<<
-  )) 
+  ))
 ```
 
 
 ---
 
 # Mappings: Multiple Series (*linetype*)
-  
-What are trends in life expectancy for the G-7 countries? 
-  
+
+What are trends in life expectancy for the G-7 countries?
+
 ``` {r line4b_eval, out.width = "90%", echo = F}
 g7 <- c("United States", "United Kingdom", "Germany", "Italy", "France", "Canada", "Japan")
 #filter to G-7 countries
@@ -315,23 +315,23 @@ filter(gapminder, country %in% g7) %>%
   ggplot() +
   geom_line(aes(x = year, y = life_expectancy,
                 linetype = country #<<
-  )) 
+  ))
 ```
 
 ---
 
 
 # Mappings: Multiple Series (*color*)
-  
-What are trends in life expectancy for the G-7 countries? 
-  
+
+What are trends in life expectancy for the G-7 countries?
+
 ``` {r line5, out.width = "60%", eval = F}
 # filter to G-7 countries
 filter(gapminder, country %in% g7) %>%
   ggplot() +
   geom_line(aes(x = year, y = life_expectancy,
                 color = country #<<
-  )) 
+  ))
 ```
 
 
@@ -339,23 +339,23 @@ filter(gapminder, country %in% g7) %>%
 
 
 # Mappings: Multiple Series (*color*)
-  
-What are trends in life expectancy for the G-7 countries? 
-  
+
+What are trends in life expectancy for the G-7 countries?
+
 ``` {r line5_eval, out.width = "90%", echo = F}
 # filter to G-7 countries
 filter(gapminder, country %in% g7) %>%
   ggplot() +
   geom_line(aes(x = year, y = life_expectancy,
                 color = country #<<
-  )) 
+  ))
 ```
 
 
 ---
-  
+
 # Adding Text Labels
-  
+
 .hi-blue[Text labels] are generally more effective than legends
 * `geom_text` from .hi-slate[ggplot] or `geom_text_repel` from .hi-slate[ggrepel] for text
 * `geom_label_repel` from .hi-slate[ggrepel] for text + boxes
@@ -372,9 +372,9 @@ filter(gapminder, country %in% g7) %>%
 
 
 ---
-  
+
 # Adding Text Labels
-  
+
 Try adding text labels to our chart:
 ``` {r line6_eval, out.width = "90%", echo = F}
 # filter to G-7 countries
@@ -387,13 +387,13 @@ filter(gapminder, country %in% g7) %>%
 
 
 ---
-  
+
 # Adding Text Labels (At Specific Points)
-  
+
 Whoops! By default `geom_text` adds text labels .hi-purple[at every data point.]
 
 --
-  
+
 To add labels at .hi-medgrn[specific points], we can  .hi-medgrn[manually define the x/y locations] for `geom_text`
 
 
@@ -406,17 +406,17 @@ g7_labs <- data.frame(country = g7,  #<<
 filter(gapminder, country %in% g7) %>%
   ggplot(aes(x = year, y = life_expectancy)) +
   geom_line(aes(linetype = country)) +
-  geom_text(data = g7_labs, # switch data object #<< 
+  geom_text(data = g7_labs, # switch data object #<<
             aes(x=x, y=y, label = country)) + #<<
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 ```
 
 ---
-  
+
 # Adding Text Labels (At Specific Points)
-  
+
 ``` {r line7_eval, out.width = "95%", echo = F}
-g7_labs <- data.frame(country = g7, 
+g7_labs <- data.frame(country = g7,
                       x = seq(1970, 2010, length.out = length(g7)),
                       y = seq(65, 85, length.out = length(g7)))
 
@@ -424,53 +424,53 @@ g7_labs <- data.frame(country = g7,
 filter(gapminder, country %in% g7) %>%
   ggplot(aes(x = year, y = life_expectancy)) +
   geom_line(aes(linetype = country)) +
-  geom_text(data = g7_labs, # switch data object #<< 
+  geom_text(data = g7_labs, # switch data object #<<
             aes(x=x, y=y, label = country)) + #<<
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 ```
 
 
 ---
-  
+
 # Adding Text Labels (At Specific Points)
-  
-Add text + boxes with `geom_label_repel` 
+
+Add text + boxes with `geom_label_repel`
 
 ``` {r line8, out.width = "95%", eval = F}
 # get a label x/y point for each country
 g7_labs <- filter(gapminder, country %in% g7) %>%
   mutate(order = rep(seq(1:7), 57)) %>%
-  filter(year == 1960+8*(order-1)) 
+  filter(year == 1960+8*(order-1))
 
 filter(gapminder, country %in% g7) %>%
   ggplot(aes(x = year, y = life_expectancy)) +
   geom_line(aes(color = country)) +
-  geom_label_repel(data = g7_labs, # switch data object #<< 
+  geom_label_repel(data = g7_labs, # switch data object #<<
                    aes(label = country, fill = country), #<<
                    min.segment.length = unit(0, "lines")) + #<<
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 ```
 
 
 ---
-  
+
 # Adding Text Labels (At Specific Points)
-  
-Add text + boxes with `geom_label_repel` 
+
+Add text + boxes with `geom_label_repel`
 
 ``` {r line8_eval, out.width = "90%", echo = F}
 # get a label x/y point for each country
 g7_labs <- filter(gapminder, country %in% g7) %>%
   mutate(order = rep(seq(1:7), 57)) %>%
-  filter(year == 1960+10*(order-1)) 
+  filter(year == 1960+10*(order-1))
 
 filter(gapminder, country %in% g7) %>%
   ggplot(aes(x = year, y = life_expectancy)) +
   geom_line(aes(color = country)) +
-  geom_label_repel(data = g7_labs, # switch data object #<< 
+  geom_label_repel(data = g7_labs, # switch data object #<<
                    aes(label = country, fill = country), #<<
                    min.segment.length = unit(0, "lines")) + #<<
-  theme(legend.position = "none") 
+  theme(legend.position = "none")
 ```
 
 ---
@@ -478,7 +478,7 @@ filter(gapminder, country %in% g7) %>%
 # Scatterplot (*geom_point*)
 
 How have fertility rates and life expectancies co-evolved over time?
-  
+
 First, plotting the data from 1962:
 
 ```{r scatter, warning=FALSE, out.width = "55%"}
@@ -488,10 +488,10 @@ filter(gapminder, year == 1962) %>%
 ```
 
 ---
-  
+
 # Faceting
-  
-  
+
+
 .hi-blue[Stratify] (by continent, and compare 1962 to 2012) with `facet_grid`:
 
 ```{r scatter-facet, warning = FALSE, out.width = "60%"}
@@ -512,7 +512,7 @@ filter(gapminder, year == 1962) %>%
 ```{r fertility-versus-life-expectancy-five-years-tall, out.width="90%", fig.height=3.5}
 years = c(1962, 1980, 1990, 2000, 2012)
 continents = c("Europe", "Asia")
-gapminder %>% 
+gapminder %>%
   filter(year %in% years & continent %in% continents) %>%
   ggplot( aes(fertility, life_expectancy, col = continent)) +
     geom_point() +
@@ -529,7 +529,7 @@ gapminder %>%
 ```{r fertility-versus-life-expectancy-five-years, out.width="90%", fig.height=3.5}
 years = c(1962, 1980, 1990, 2000, 2012)
 continents = c("Europe", "Asia")
-gapminder %>% 
+gapminder %>%
   filter(year %in% years & continent %in% continents) %>%
   ggplot( aes(fertility, life_expectancy, col = continent)) +
     geom_point() +
@@ -546,7 +546,7 @@ gapminder %>%
 ```{r facet-without-fixed-scales, warning=FALSE, out.width="90%", fig.height=3.5}
 years = c(1962, 1980, 1990, 2000, 2012)
 continents = c("Europe", "Asia")
-gapminder %>% 
+gapminder %>%
   filter(year %in% years & continent %in% continents) %>%
   ggplot( aes(fertility, life_expectancy, col = continent)) +
     geom_point() +
@@ -567,7 +567,7 @@ gapminder %>%
 .hi-purple[Structure:]
   * Categorical variable on y axis (easiest with factor)
   * points as values on x axis
-  
+
 ```{r, fig.height=3, eval = F}
 gapminder %>% mutate(gdp_percapita = gdp/population) %>%
   filter(year == 1970 & !is.na(gdp_percapita) & continent=="Asia") %>%
@@ -646,7 +646,7 @@ Using .hi-slate[ggridges] for staggered densities (a la [.hi-dkorange[Joy Divisi
 pacman::p_load(ggridges)
 gapminder %>% mutate(gdp_percapita = gdp/population) %>%
   filter(year == 1970 & !is.na(gdp_percapita)) %>%
-  ggplot(aes(gdp_percapita, continent)) + 
+  ggplot(aes(gdp_percapita, continent)) +
     geom_density_ridges() + #<<
     scale_x_log10()
 ```
@@ -694,7 +694,7 @@ gapminder %>% mutate(gdp_percapita = gdp/population) %>%
   filter(year %in% c(1960, 2010) & !is.na(gdp_percapita)) %>%
   ggplot(aes(gdp_percapita, fill = continent)) +
     geom_density(alpha=0.3, position = "stack") + #<<
-    facet_grid(year ~ .) 
+    facet_grid(year ~ .)
 ```
 ]
 
@@ -708,7 +708,7 @@ Easier to compare with log 10 transformation
 gapminder %>% mutate(gdp_percapita = gdp/population) %>%
   filter(year %in% c(1960, 2010) & !is.na(gdp_percapita)) %>%
   ggplot(aes(gdp_percapita, fill = continent)) +
-    geom_density(alpha=0.3, position = "stack") + 
+    geom_density(alpha=0.3, position = "stack") +
     facet_grid(year ~ .) + scale_x_log10() #<<
 ```
 ]
@@ -725,8 +725,8 @@ Scale each continent by its number of countries using the  .hi-medgrn[computed v
 gapminder %>% mutate(GDP_percapita = gdp/population) %>%
   filter(year %in% c(1960, 2010) & !is.na(GDP_percapita)) %>%
   ggplot(aes(GDP_percapita, y=..count.., fill = continent)) + #<<
-    scale_x_continuous(trans = "log10") + 
-    geom_density(alpha=0.3, position = "stack") + 
+    scale_x_continuous(trans = "log10") +
+    geom_density(alpha=0.3, position = "stack") +
     facet_grid(year ~ .) + scale_x_log10()
 ```
 ]
@@ -742,7 +742,7 @@ And weight countries within each continent by its population:
 gapminder %>% mutate(GDP_percapita = gdp/population) %>%
   filter(year %in% c(1960, 2010) & !is.na(GDP_percapita)) %>%
   ggplot(aes(GDP_percapita, y=..count.., weight=population, fill = continent)) + #<<
-    geom_density(alpha=0.3, position = "stack") + 
+    geom_density(alpha=0.3, position = "stack") +
     facet_grid(year ~ .) +
     scale_x_log10()
 ```
@@ -757,9 +757,9 @@ name: export
 # Exporting Graphs
 
 ---
-  
+
 # Exporting Graphs
-  
+
 You can save your .hi-slate[ggplot2]-based figures using `ggsave()`.
 
 .hi-blue[Option 1:] By default, `ggsave()` saves the last plot printed to the screen.
@@ -810,7 +810,7 @@ And then save this figure by name using the `plot` argument:
 # Save our simple scatter plot name 'ggsave'
 ggsave(
   # can add subfolder directly in filename
-  filename = "output/simple_scatter.pdf", 
+  filename = "output/simple_scatter.pdf",
   plot = points_2010 #<<
 )
 ```
@@ -880,7 +880,7 @@ display.brewer.all(type="qual")
 
 # Use Established Color Schemes
 
-There are several great color schemes available in R created by professional visual designers. 
+There are several great color schemes available in R created by professional visual designers.
 
 - .hi-slate[RColorBrewer] is based on the research of cartographer Cynthia Brewer. Her [.hi-dkorange[ColorBrewer]](https://colorbrewer2.org/) website lets you choose a color scheme by value ordering and whether you need it to be colorblind safe, printer friendly, or photocopy safe.
 
@@ -1009,7 +1009,7 @@ name: themes
   * Alternate .hi-slate[ggplot2] themes: `theme_bw`, `theme_linedraw`, `theme_light`, `theme_dark`, `theme_minimal`, `theme_classic`, `theme_void`
   * Additional themes in .hi-slate[ggthemes]
     * i.e. want to replicate known appearances from [.hi-dkorange[Excel, Stata, The Economist, FiveThirtyEight, or WSJ]](https://github.com/jrnold/ggthemes)
-    
+
 ---
 
 # Themes
@@ -1118,7 +1118,7 @@ Alternatively, you can create a .hi-medgrn[custom theme] by tweaking [.hi-dkoran
 ```{r, out.width = "70%"}
 theme_plot <- filter(gapminder, year == 1962) %>%
   ggplot(aes(fertility, life_expectancy, color = continent)) +
-    geom_point() 
+    geom_point()
 
 theme_plot +
   theme(legend.position = "bottom") #<<
@@ -1141,7 +1141,7 @@ theme_plot +
 ```{r, out.width = "70%"}
 theme_plot +
   theme(legend.position = "bottom",
-        panel.background = element_rect(fill = NA), # change to white 
+        panel.background = element_rect(fill = NA), # change to white
          panel.grid.major = element_line(color = "grey95", linewidth = 0.3), # change color of major grid lines (lines at displayed values) #<<
   panel.grid.minor = element_line(color = "grey95", linewidth = 0.3)) #change color of minor grid lines (lines between displayed values) #<<
 
@@ -1155,23 +1155,23 @@ theme_plot +
 ```{r, out.width = "65%"}
 theme_plot +
   theme(legend.position = "bottom",
-        panel.background = element_rect(fill = NA), # change to white 
-         panel.grid.major = element_line(color = "grey95", linewidth = 0.3), # change color of major grid lines (lines at displayed values) 
-  panel.grid.minor = element_line(color = "grey95", linewidth = 0.3), #change color of minor grid lines (lines between displayed values) 
+        panel.background = element_rect(fill = NA), # change to white
+         panel.grid.major = element_line(color = "grey95", linewidth = 0.3), # change color of major grid lines (lines at displayed values)
+  panel.grid.minor = element_line(color = "grey95", linewidth = 0.3), #change color of minor grid lines (lines between displayed values)
     axis.ticks = element_line(color = "grey95", linewidth = 0.3)) # make axis tick marks the same color as grid lines #<<
 ```
 ]
 
 
 ---
-# Custom Themes: Fonts 
+# Custom Themes: Fonts
 
 Use .hi-slate[showtext] to add a custom font
   * i.e. add any [.hi-dkorange[Google Font]](https://fonts.google.com/)
     * I like Lato
   * `showtext_auto` to automatically use .hi-slate[showtext] in all plots
   * `showtext_begin/end` to turn on and off when desired
-  
+
 ```{r, out.width = "65%"}
 # Name of Font Family, what we'll refer to it as in R
 font_add_google("Schoolbell", "bell")
@@ -1179,25 +1179,25 @@ font_add_google("Schoolbell", "bell")
 
 
 ---
-# Custom Themes: Fonts 
+# Custom Themes: Fonts
 
 
-With default font: 
+With default font:
 
 .small[
 ```{r, out.width = "65%"}
 theme_plot +
   labs(title = "Relationship Between Fertility and Life Expectancy") +
-  theme(plot.title=element_text(size=16)) 
+  theme(plot.title=element_text(size=16))
 ```
 ]
 
 
 ---
-# Custom Themes: Fonts 
+# Custom Themes: Fonts
 
 
-With custom font: 
+With custom font:
 
 .small[
 ```{r, out.width = "65%"}
@@ -1223,7 +1223,7 @@ name: extend
 Add a .hi-medgrn[secondary y axis] with`scale_y_continuous/discrete()` and `sec.axis = sec_axis()`
 .small[
 ```{r,  out.width="60%"}
-us_gap <- filter(gapminder, country == "United States") 
+us_gap <- filter(gapminder, country == "United States")
 
   ggplot(us_gap, aes(x = year))+
   geom_line(aes(y = life_expectancy)) +
@@ -1261,7 +1261,7 @@ scalefactor <- max(us_gap$life_expectancy, na.rm = T)/max(us_gap$fertility, na.r
   geom_line(aes(y = life_expectancy)) +
   geom_line(aes(y = fertility * scalefactor), linetype = "dashed") + #<<
   scale_y_continuous(  
-    name = "Fertility", # name for first axis 
+    name = "Fertility", # name for first axis
     sec.axis = sec_axis(~./scalefactor, name = "Life Expectancy")) #<<
 ```
 ]
