@@ -117,7 +117,7 @@ pacman::p_load(RColorBrewer, viridis, Polychrome, broman)
 Additional packages if you want to replicate the theme/plot extensions:
 
 ```{r}
-pacman::p_load(ggtheme, showtext, gganimate, ggExtra)
+pacman::p_load(ggthemes, showtext, gganimate, gifski, ggExtra)
 ```
 
 ---
@@ -417,7 +417,7 @@ filter(gapminder, country %in% g7) %>%
   
 ``` {r line7_eval, out.width = "95%", echo = F}
 g7_labs <- data.frame(country = g7, 
-                      x = seq(1970, 2016, length.out = length(g7)),
+                      x = seq(1970, 2010, length.out = length(g7)),
                       y = seq(65, 85, length.out = length(g7)))
 
 # filter to G-7 countries
@@ -440,7 +440,7 @@ Add text + boxes with `geom_label_repel`
 # get a label x/y point for each country
 g7_labs <- filter(gapminder, country %in% g7) %>%
   mutate(order = rep(seq(1:7), 57)) %>%
-  filter(year == 1960+10*(order-1)) 
+  filter(year == 1960+8*(order-1)) 
 
 filter(gapminder, country %in% g7) %>%
   ggplot(aes(x = year, y = life_expectancy)) +
@@ -767,7 +767,7 @@ You can save your .hi-slate[ggplot2]-based figures using `ggsave()`.
   * saves to the working directory
 ```{R, ex-ggsave-1a, eval = F}
 # Create a simple scatter plot
-filter(gap_full, year == 2000) %>%
+filter(gapminder, year == 2000) %>%
 ggplot(aes(x = fertility, y = life_expectancy)) +
 geom_point()
 
@@ -800,7 +800,7 @@ ggsave(filename = "simple_scatter.png",
 .hi-dkgrn[Option 2:] You can first assign your `ggplot()` objects to memory:
 ```{R, ex-gg-assign, eval = F}
 # Create a simple scatter plot named 'gg_points'
-points_2010 <- filter(gap_full, year == 2010) %>%
+points_2010 <- filter(gapminder, year == 2010) %>%
   ggplot(aes(x = fertility, y = life_expectancy)) +
   geom_point()
 ```
@@ -1008,7 +1008,7 @@ name: themes
   * Default .hi-slate[ggplot2] choice is `theme_gray`
   * Alternate .hi-slate[ggplot2] themes: `theme_bw`, `theme_linedraw`, `theme_light`, `theme_dark`, `theme_minimal`, `theme_classic`, `theme_void`
   * Additional themes in .hi-slate[ggthemes]
-    * i.e. want to replicate known appearances from [.hi-dkorange[Excel/Stata, The Economist, FiveThirtyEight, or WSJ]](https://github.com/jrnold/ggthemes)
+    * i.e. want to replicate known appearances from [.hi-dkorange[Excel, Stata, The Economist, FiveThirtyEight, or WSJ]](https://github.com/jrnold/ggthemes)
     
 ---
 
@@ -1063,7 +1063,7 @@ filter(gapminder, year == 1962) %>%
     theme_void() #<<
 ```
 ---
-# ggtheme Themes: *theme_stata*
+# ggthemes Themes: *theme_stata*
 
 ```{r, out.width = "70%"}
 pacman::p_load(ggthemes)
@@ -1074,7 +1074,7 @@ filter(gapminder, year == 1962) %>%
 ```
 
 ---
-# ggtheme Themes: *theme_economist*
+# ggthemes Themes: *theme_economist*
 
 ```{r, out.width = "70%"}
 filter(gapminder, year == 1962) %>%
@@ -1084,7 +1084,7 @@ filter(gapminder, year == 1962) %>%
 ```
 
 ---
-# ggtheme Themes: *theme_wsj*
+# ggthemes Themes: *theme_wsj*
 
 ```{r, out.width = "70%"}
 filter(gapminder, year == 1962) %>%
@@ -1094,7 +1094,7 @@ filter(gapminder, year == 1962) %>%
 ```
 
 ---
-# ggtheme Themes: *theme_excel*
+# ggthemes Themes: *theme_excel*
 
 ```{r, out.width = "70%"}
 filter(gapminder, year == 1962) %>%
@@ -1215,6 +1215,88 @@ class: inverse, middle
 name: extend
 
 # Extending ggplot2
+
+---
+
+# Secondary Y Axes
+
+Add a .hi-medgrn[secondary y axis] with`scale_y_continuous/discrete()` and `sec.axis = sec_axis()`
+.small[
+```{r,  out.width="60%"}
+us_gap <- filter(gapminder, country == "United States") 
+
+  ggplot(us_gap, aes(x = year))+
+  geom_line(aes(y = life_expectancy)) +
+  geom_line(aes(y = gdp), linetype = "dashed")
+```
+]
+---
+
+# Secondary Y Axes
+
+Add a .hi-medgrn[secondary y axis] with`scale_y_continuous/discrete()` and `sec.axis = sec_axis()`
+.small[
+```{r,  out.width="55%"}
+  ggplot(us_gap, aes(x = year))+
+  geom_line(aes(y = life_expectancy)) +
+  geom_line(aes(y = fertility), linetype = "dashed") +
+  scale_y_continuous(  #<<
+    name = "Fertility", # name for first axis  #<<
+    sec.axis = sec_axis(~., name = "Life Expectancy")) #<<
+```
+]
+
+
+---
+
+# Secondary Y Axes
+
+Add a .hi-blue[scale factor adjustment] to rescale the second geom/right axis
+
+.small[
+```{r,  out.width="55%"}
+scalefactor <- max(us_gap$life_expectancy, na.rm = T)/max(us_gap$fertility, na.rm = T) #<<
+
+  ggplot(us_gap, aes(x = year))+
+  geom_line(aes(y = life_expectancy)) +
+  geom_line(aes(y = fertility * scalefactor), linetype = "dashed") + #<<
+  scale_y_continuous(  
+    name = "Fertility", # name for first axis 
+    sec.axis = sec_axis(~./scalefactor, name = "Life Expectancy")) #<<
+```
+]
+---
+
+# Secondary Y Axes
+
+Add  .hi-medgrn[color] to emphasize which axis is for which series
+
+```{r,  out.width="90%", eval = F}
+ggplot(us_gap, aes(x = year))+
+  geom_line(aes(y = life_expectancy), col = "navyblue") + #<<
+  geom_line(aes(y = fertility * scalefactor), linetype = "dashed", col = "forestgreen") + #<<
+  scale_y_continuous(name = "Fertility", sec.axis = sec_axis(~./scalefactor, name = "Life Expectancy"))  +
+  theme(axis.title.y.left=element_text(color="navyblue", size = 32), #<<
+        axis.text.y.left=element_text(color="navyblue", size = 32), #<<
+        axis.title.y.right=element_text(color="forestgreen", size =32), #<<
+        axis.text.y.right=element_text(color="forestgreen", size = 32))  #<<
+```
+---
+
+# Secondary Y Axes
+
+Add  .hi-medgrn[color] to emphasize which axis is for which series
+
+```{r,  out.width="90%", echo = F}
+ggplot(us_gap, aes(x = year))+
+  geom_line(aes(y = life_expectancy), col = "navyblue") + #<<
+  geom_line(aes(y = fertility * scalefactor), linetype = "dashed", col = "forestgreen") + #<<
+  scale_y_continuous(name = "Fertility", sec.axis = sec_axis(~./scalefactor, name = "Life Expectancy"))  +
+  theme(axis.title.y.left=element_text(color="navyblue", size = 32), #<<
+        axis.text.y.left=element_text(color="navyblue", size = 32), #<<
+        axis.title.y.right=element_text(color="forestgreen", size = 32), #<<
+        axis.text.y.right=element_text(color="forestgreen", size = 32))  #<<
+```
 
 
 ---
