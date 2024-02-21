@@ -558,7 +558,7 @@ But then we get... the dreaded captcha
 # 6-7. Pass Verification Test + Scrape
 
 While I have yet to figure out a way around one of these image recognition captchas, here's a .hi-medgrn[semi-automated workaround:]
-  * Wait a set amount of time until an HTML element is present with `html_expect()` and `is_present`
+  * Wait a set amount of time until an HTML element is present with `elem_expect()` and `is_present()`
     * i.e. element from the results page after the captcha
   * Manually complete the captcha (must be viewing the session!)
   * Proceed to scrape what's on the page
