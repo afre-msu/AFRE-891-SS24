@@ -59,7 +59,6 @@ This work is licensed under a
  * String Cleaning
  * Number Storage
  * Data Cleaning Checklist
-https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/05-Visualization/05-Visualization.html
 
  [**Lecture 5: Visualization**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/05-Visualization/05-Visualization.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/05-Visualization/05-Visualization.pdf))
