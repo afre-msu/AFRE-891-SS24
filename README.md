@@ -79,23 +79,20 @@ This work is licensed under a
  * Interacting with Static Websites
  * Scraping Dynamic and Interactive Websites
  * APIS
-  * Explicit API Endpoint, No Key
-  * Explcity API Endpoint with Key
-  * Hidden APIs
+ * Explicit API Endpoint, No Key
+ * Explcity API Endpoint with Key
+ * Hidden APIs
  * Considerate Web Scraping
 
  [**Lecture 7: Programming**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/07-Programming/07-Programming.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/07-Programming/07-Programming.pdf))
 
- * Intro to Web Scraping
- * Scraping Static Websites
- * Interacting with Static Websites
- * Scraping Dynamic and Interactive Websites
- * APIS
-  * Explicit API Endpoint, No Key
-  * Explcity API Endpoint with Key
-  * Hidden APIs
- * Considerate Web Scraping
+ * If/Else Statements
+ * For Loops
+ * Functions
+ * Indirection and Name Injection
+ * Vectorization
+ * Parallelization
 
    
  [**Lecture 8: Fast Econometric Analysis in R**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/08-Analysis/08-Analysis.html)
