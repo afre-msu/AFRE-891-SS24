@@ -142,7 +142,7 @@ As well, let's load data necessary to replicate results from [Taylor and Drucken
 wl_df <- read_csv("data/zip_PANEL_data.csv") %>%
   drop_na(county_fips, state_fips, claims)
 
-wl_ld_df <- read_csv("data/zip_LD_data.csv")
+wl_ld_df <- readRDS("data/zip_LD_data.rds")
 
 coastal <- read_csv("data/coastal_zips.csv")
 
