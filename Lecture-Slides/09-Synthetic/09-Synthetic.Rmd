@@ -1,5 +1,5 @@
 ---
-title: "Lecture 9: Synthetic Control Methods"
+title: "Lecture 9: Synthetic Control Methods, Part 1"
 author: "James Sears* <br> AFRE 891 SS 24 <br> Michigan State University"
 date: ".small[<br> *Parts of these slides are adapted from [“Econometrics III”](https://github.com/edrubin/EC607S23) by Ed Rubin.]"
 
@@ -9,7 +9,7 @@ output:
     css: [msu-default.css, msu-metropolis.css, metropolis-fonts]
     lib_dir: libs
     latex_engine: lualatex
-    self_contained: false
+    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -121,15 +121,10 @@ This lecture is focusing on .hi-medgrn[Synthetic Control Methods], which will le
 
 Packages we'll use today:
 
-```{r, eval = F}
-# If not installed, add in packages from GitHub not on CRAN
-if (!require("augsynth")) remotes::install_github("ebenmichael/augsynth")
-
-```
 
 ```{r}
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(augsynth, fixest, synthdid, tidysynth, tidyverse)
+pacman::p_load(fixest, tidysynth, tidyverse)
 ```
 
 --
