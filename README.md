@@ -98,14 +98,52 @@ This work is licensed under a
  [**Lecture 8: Fast Econometric Analysis in R**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/08-Analysis/08-Analysis.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/08-Analysis/08-Analysis.pdf))
 
+ * Basic Regression Analysis
+ * Fast Fixed Effects Regression
+ * (Programmatic) Formulas
+ * Standard Errors
+ * Regression Output
+ * IV Regression
+ * Difference-in-Differences
+ * Event Study and Dynamic Treatment Effects
+
+
  [**Lecture 9: Synthetic Control Methods**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/09-Synthetic/09-Synthetic.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/09-Synthetic/09-Synthetic.pdf))
+
+ * Matching
+ * Canonical Synthetic Control method (SCM)
+ * Synthetic Difference-in-Differences
+ * Partially Pooled SCM
+   
 
  [**Lecture 10: Spatial Data**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/10-Spatial/10-Spatial.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/10-Spatial/10-Spatial.pdf))
 
+ * Intro to Spatial Data in R and the sf package
+ * Quick Mapping
+ * Reference Systems and Projections
+ * Working with Vector Data
+  * Spatial Queries: Measurement
+  * Spatial Queries: Relationship
+  * Geometric Operations
+  * Spatial Joins
+ * Intro to Raster Data
+ * Common Raster Data
+ * Raster Operations
+ * Combining Rasters and Vectors
+
  [**Lecture 11: Machine Learning**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/11-ML/11-ML.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/11-ML/11-ML.pdf))
+
+ * Intro to Machine Learning
+ * Resampling
+ * Machine Learning for Classification
+ * Model Selection and Regularization
+ * Trees and Forests
+ * Machine Learning for Causal Treatment Effect Estimation
+ * Deep Learning
+
 
  [**Lecture 12: Big Data Tools (Time Permitting)**](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/12-Big-Data/12-Big-Data.html)
  ([.pdf](https://raw.githack.com/afre-msu/AFRE-891-SS24/main/Lecture-Slides/12-Big-Data/12-Big-Data.pdf))
