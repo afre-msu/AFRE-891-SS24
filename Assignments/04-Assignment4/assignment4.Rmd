@@ -1,0 +1,302 @@
+---
+title: "Assignment 4: Regression, Synthetic Control, and Spatial Analysis"
+subtitle: AFRE 891 SS24
+date: ""
+output: html_document
+---
+
+***
+
+Collaborators:
+
+***
+
+## Introduction
+
+For this assignment we'll be replicating and extending ["Minimum Wage Increases and Agricultural Employment of Locals and Guest Workers" by Smith, Ifft and Kim (2022) JAAEA](https://onlinelibrary.wiley.com/doi/10.1002/jaa2.27).
+
+This paper exploits recent state-level changes in minimum wage regulation to examine the impact of minimum wage increases on agricultural employment. The authors focus on overall employment effects as well as heterogeneity across subgroups, with particular attention to differential impacts for native/naturalized US citizens and guest workers (those that participate in the H-2A visa program). 
+
+
+They've got a nicely built replication package available, and fortunately for us they did all their main data wrangling and analysis in Stata!
+
+Use the below code chunk as your preamble to load in packages, set any plot themes, and load the `acs_analysis.dta` file currently in the `processed_data` folder.
+
+```{r}
+
+```
+
+***
+
+
+### Part 1: Wrangling H2A Data
+
+This paper combines data from several different sources, including the American Community Survey (ACS), H2A disclosure data from the US Department of Labor, and minimum wage data from the St. Louis Federal Reserve Bank (who we know has a pretty great website and API!)
+
+They end up doing a lot of data cleaning/wrangling to get to their final analysis data. Rather than replicate all of it, we're just going to re-do their wrangling of the ACS wage data.
+
+1. Write a function that reads in the raw ACS data for a given year and cleans it.
+
+    * Name your function `clean_wage` and call its lone argument `year` (expected to be a numeric of 2010-2018).
+    * Read in the CSV and drop the first variable label row (use a logical condition rather than dropping the row by its index)
+      * Desired file is named `"ACSDP5Y(year).DP03_data_with_overlays_2020-02-10T101725.csv"` where `(year)` is 2010-2018
+    * Select and rename variables so that your dataframe consists of
+      1. `fips`: the last 5 characters of the original `GEO_ID` variable
+      1. `med_earnings`: a numeric version of the original `DP03_0092E` variable, divided by 2080
+      1. `med_earnings_m`: a numeric version of the original `DP03_0093E` variable, divided by 2080
+      1. `med_earnings_f`: a numeric version of the original `DP03_0094E` variable, divided by 2080
+      1. `year`: the year of the file
+
+1. Use `map()` to run the function for the years 2010-2018, then combine them row-wise in a data frame. Save the output to a `.rds` file in the `processed_data` project folder with the filename `acs_clean.rds`
+
+```{r, eval = F}
+
+```
+
+
+***
+
+
+### Part 2: Mapping
+
+Whenever we have spatially-varying outcomes/treatment effects, it's helpful to **make some maps!**
+
+#### Shapefiles
+In order to create thematic maps, we need a shapefile of states. An easy way to do this is by using the **tigris** package to bring in the Census Bureau's TIGRIS shapefiles as an `sf` object.
+
+1. Use the `states()` function in the  **tigris** package to load shapefiles for the continental U.S.
+    * Use the `progress_bar = FALSE` argument to disable the progress bar when downloading/compiling
+    * Make sure to drop the following territories: American Samoa, Guam, Northern Mariana Islands, Puerto Rico, US Virgin Islands
+  
+```{r}
+
+```
+
+1. Using the `acs_analysis.dta` file, obtain the following summary values by state:
+    * Mean of state minimum wage (not the federal minimum wage)
+    * Mean of (agricultural) employment binary indicator
+    * Mean of noncitizen binary indicator
+    * Mean of naturalized citizen binary indicator
+    * When done, you should have a summary data frame with one row per state in the `acs_analysis.dta` data.
+
+```{r}
+
+```
+
+1. Merge the state shapefile with the ACS summary data frame.
+
+    * _Hint: you'll need to make sure that the state FIPS variables in both files are the right type and account for leading zeros/single character codes._
+
+```{r}
+
+```
+
+
+1. Create a thematic map showing the variation in **average minimum wages by state** for the **Continental US**
+
+```{r}
+
+```
+
+
+
+
+1. Create thematic maps for the **Continental US** for the other three variables in the summary data frame.
+
+```{r}
+
+```
+
+***
+
+
+### Part 3: Regression
+
+1. Next, replicate Table 3 with results of the individual models of Equations 1-2 for agricultural nonmanager workers. Use `feols()` and `etable()`.
+
+    * Use the `acs_analysis.dta` file
+    * Use the binary employment indicator as the dependent variable ($Employed_{it}$)
+    * On the right-hand side of the formula, include
+      * The state minimum wage (not the federal minimum wage)
+      * Individual demographics
+        * immigration status: indicators for 1) whether a person is a noncitizen, and 2) whether a person is a naturalized citizen
+        * Indicators for each race (either added as a factor or as fixed effects)
+        * Age 
+        * Indicators for marital status (either added as a factor or as fixed effects)
+        * Indicator for female
+        * Indicator for Hispanic
+      * Unemployment rate
+      * State by year time trends for Columns 1, 3, and 4
+      * Region fixed effects (`region_fe`) for Columns 1, 3, and 4
+      * State fixed effects for Column 2
+      * Year fixed effects for all Columns
+    * Use the variable labeled "Person weight" for the unit weights
+    * See the help file for `feols()` for more on the `weights` argument
+    * Cluster by state
+    * Make sure to use the `etable()` settings to arrange coefficients in the desired order, use descriptive labels to match the table, add a note and extra lines, and a title.
+    * As well, use the `markdown = TRUE` argument to display the Latex table as an image in your RMarkdown file.
+    * _Hint: use the `notes = FALSE` setting in `feols()` to disable the notifications for NA and collinearity drops_
+    * _Hint Hint: You may need to copy + paste the HTML code (everything from `<div` to `/div>`) in your output to below the code chunk in order for the table to display in the markdown file_
+
+```{r, eval = T}
+
+```
+
+
+
+1. Think back to our discussion about standard errors and clustering. Given what we talked about from Abadie et al. (2023), is clustering at the state level the right choice?
+    * Articulate your thoughts below, referring to both the impact of the sampling process and the treatment assignment mechanism in making your determination.
+
+
+
+
+1. Modify the Table 3 Column 4 equation to explore whether there are differences in the impact of minimum wage changes for **female agricultural employment**. 
+    * Include an interaction between female and the minimum wage
+      * Make sure to also include the levels of each of the variables!! (Note: you **always need to include all components of an interaction in your regression for it to be interpreted the way you want to**)
+    * Based on your results, does there appear to be
+      * An impact of minimum wage changes for male ag employment?
+      * A gender gap in ag employment?
+      * A differential impact of minimum wage changes for female ag employment relative to male?
+      * For each, discuss the relevant coefficient and statistical significance, commenting on the sign/magnitude of the effect if one is statistically distinguishable.
+
+```{r}
+
+```
+
+
+
+***
+
+
+### Part 4: Synthetic Difference-in-Differences
+
+
+The authors use Synthetic Difference-in-Differences as a complementary approach, using it "to determine the potential for nonparallel trends to influence our analysis."
+
+Let's replicate their findings and explore sensitivity to specifications.
+
+1. To avoid staggered adoption estimation concerns (at the time of project completion/publishing), the employed model limits the treated states to those that adopted higher minimum wages in just 2014 and just 2015, estimating separate SDIDs for each treatment year. 
+
+    * Load in the `dstate_synth2014_acs_log.csv` file and estimate a synthetic difference-in-differences looking into the impact of minimum wage increases on ag emplyment.
+      * Use `logwork` as the dependent variable
+      * Use `treat` as the indicator for treatment status
+      * Set the other two variables as your unit and time variables
+    * Once estimated, report the estimated treatment effect and standard error, and show the SDID plot.
+
+
+```{r}
+
+```
+1. What do you make of the estimate you obtained? The authors themselves state that they don't believe that DID is appropriate in this setting - do you agree with them? Do you think the Synthetic DID solved this issue or do you still have concerns? 
+
+
+***
+
+
+### Part 5: Causal Forest
+
+Next, let's get some practice using causal forests to estimate conditional treatment effects using a comparable structure to Column (1) of Table 3.
+
+
+  1. Starting with the main `acs_analysis` data from earlier, drop rows with NA values for the following variables:
+      * `empl`, `state_fips`, `year`, `region_fe`, `perwt`
+
+```{r}
+
+```
+
+1. Generate a new variable named `empl_res` calculated as the residual from a regression of `empl` on the same spatial/unit controls as in the first regression from Table 3, i.e.
+    * state by year time trends
+    * state fixed effects
+    * region fixed effects
+    * _Hint: use `$fitted.values$ to retrieve the residuals from the `feols` regression object after estimation._
+
+```{r}
+
+```
+
+1. Prepare the inputs to `grf`.
+    1. **Dependent variable:** create a vector of the residualized ag employment you just created
+    1. **Treatment variable:** specify the continuous minimum wage variable (same as you used in your earlier regressions) as a vector
+    1. **Weighting variable:** specify the `perwt` variable as a vector
+    1. **Cluster variable:** specify the state FIPS variable as a vector
+    1. **Covariates:** select non-citizen, naturalized, race, age, marital status, female, hispanic, and the unemployment rate and format them as a matrix
+
+```{r}
+
+```
+
+1. Estimate the casual forest using `causal_forest()` and your just-created inputs.
+    * Set the covariate matrix as the `X` argument
+    * Set the residualized ag employment vector as `Y`
+    * Set `W` to be the treatment minimum wage vector
+    * Set the `perwt` vector as the `sample.weights` argument
+    * Give the state FIPS code vector as the `cluster` argument
+    * Start by growing a forest with 2,000 trees
+    * Leave all other settings at their default values
+  
+```{r}
+
+```
+
+1. Use the `predict()` function to obtain treatment effect estimates for each observation. Obtain estimated variances and use them to construct 95% confidence intervals, filtering to those that are statistically significant.
+
+```{r}
+
+```
+
+1. Plot the distribution of statistically significant treatment effects. Add a solid vertical line at zero and a dashed vertical line at the coefficient estimate on minimum wage from Column (1) of Table 3. 
+
+```{r}
+
+```
+
+1. Describe the distribution of conditional treatment effects obtained from the causal forest. What do you notice? How does it compare to the coefficient estimate on minimum wage from the linear regression? Looking at the distribution, what do you conclude about the impact of minimum wage changes on agricultural employment?
+
+1. Use the `average_treatment_effect()` function to obtain an estimate of the average partial effect (what we get back since we have a continuous rather than binary treatment).
+    * Set the target sample to the full sample (`all`)
+    * Use augmented inverse-propensity weighting as the inference method (`AIPW`)
+    * Do not estimate on a subset of the data
+    * How does this value compare to the coefficient from Column (1) of Table 3?
+
+```{r}
+
+```
+
+1. Next, look to see if there are differences in the average partial effect for noncitizens?
+    * Repeat your use of `average_treatment_effect()`, but this time use the `subset` argument to obtain estimates for two separate subsets:
+      1. The subset of non-citizens
+      1. The subset of citizens
+    * How do these average effects differ? How does the difference between the two compare to the coefficient estimate on the interaction of minimum wage and noncitizen from Column (4) of Table 3?
+
+```{r}
+
+```
+
+***
+
+## Challenge
+
+Everything below this point won't be used to calculate assignment grades. Instead, think of these as more complex tasks you can attempt to 1) check your understanding and wrangling skills, and 2) practice some extensions of the techniques we covered in class.
+
+<br>
+
+### C1:  Advanced Maps
+
+
+1. Repeat your map from Part 2 Question 1, but this time use **tmap** to turn it into an interactive map, with each year being a different layer that you can select/deselect
+
+1. Use the **gganimate** package to turn your minimum wage map into an animated gif showing how state minimum wages have evolved over the same period.
+
+  *Hint: see the code example of an animated faceted scatterplot in `05-Visualization-Pt2.Rmd` 
+
+
+
+<br>
+<br>
+
+***
+
+<center>
+When done, make sure to push your updated assignment repo containing the **completed .Rmd file**, the knit **HTML document**, and any other files or folders created during the knitting process.
+</center>
