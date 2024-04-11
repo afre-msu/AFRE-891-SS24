@@ -10,7 +10,7 @@ output:
     css: [msu-default.css, msu-metropolis.css, metropolis-fonts]
     lib_dir: libs
     latex_engine: lualatex
-    self_contained: false
+    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -109,8 +109,7 @@ xaringanExtra::use_xaringan_extra(c("tile_view", "fit_screen"))
 Packages we'll use today:
 
 ```{r}
-pacman::p_load(grf, janitor, magrittr, parsnip, ranger, rpart, rpart.plot, 
-               rsample, scales, tidymodels, tidyverse, vip)
+pacman::p_load(grf, janitor, magrittr, parsnip, ranger, rpart, rpart.plot, rsample, scales, tidymodels, tidyverse, vip)
 ```
 
 As well, let's use two datasets:
@@ -299,7 +298,7 @@ Let's visualize this by growing a classification tree for predicting credit card
 Consider our two-dimensional covariate space:
 
 
-```{r, partition-base, include = F, cache = T}
+```{r, partition-base, include = F, cache = F}
 gg_base <- ggplot(
   data = default_df,
   aes(x = balance, y = income, color = default, alpha = default)
@@ -324,7 +323,7 @@ gg_base
 
 The .hi-pink[first partition] splits balance at $1,800.
 
-```{r, plot-split1, echo = F, cache = T, dependson = c(-2), out.width = "88%"}
+```{r, plot-split1, echo = F, cache = F, dependson = c(-2), out.width = "88%"}
 # Add the first split (to existing figure)
 gg_base +
 annotate(
@@ -342,7 +341,7 @@ annotate(
 
 The .hi-pink[second partition] splits balance at $1,972, (.it[conditional on bal. > $1,800]).
 
-```{r, plot-split2, echo = F, cache = T, dependson = c(-3), out.width = "88%"}
+```{r, plot-split2, echo = F, cache = F, dependson = c(-3), out.width = "88%"}
 gg_base +
 annotate(
   "segment",
@@ -361,7 +360,7 @@ annotate(
 
 The .hi-pink[third partition] splits income at $27K .b[for] bal. between $1,800 and $1,972.
 
-```{r, plot-split3, echo = F, cache = T, dependson = c(-4), out.width = "88%"}
+```{r, plot-split3, echo = F, cache = F, dependson = c(-4), out.width = "88%"}
 gg_base +
 annotate(
   "segment",
@@ -386,7 +385,7 @@ annotate(
 
 These three partitions give us four .hi-pink[regions]...
 
-```{r, plot-split3b, echo = F, cache = T, dependson = c(-5), out.width = "88%"}
+```{r, plot-split3b, echo = F, cache = F, dependson = c(-5), out.width = "88%"}
 gg_base +
 annotate(
   "segment",
@@ -426,7 +425,7 @@ annotate("text",
 
 .hi-pink[Predictions] cover each region (e.g. using the region's .hi-pink[most common class]).
 
-```{r, plot-split3c, echo = F, cache = T, dependson = c(-6), out.width = "88%"}
+```{r, plot-split3c, echo = F, cache = F, dependson = c(-6), out.width = "88%"}
 gg_base +
 annotate(
   "rect",
@@ -455,7 +454,7 @@ annotate(
 
 .hi-pink[Predictions] cover each region (e.g. using the region's .hi-pink[most common class]).
 
-```{r, plot-split3d, echo = F, cache = T, dependson = c(-7), out.width = "88%"}
+```{r, plot-split3d, echo = F, cache = F, dependson = c(-7), out.width = "88%"}
 gg_base +
 annotate(
   "rect",
@@ -489,7 +488,7 @@ annotate(
 
 .hi-pink[Predictions] cover each region (e.g. using the region's .hi-pink[most common class]).
 
-```{r, plot-split3e, echo = F, cache = T, dependson = c(-8), out.width = "88%"}
+```{r, plot-split3e, echo = F, cache = F, dependson = c(-8), out.width = "88%"}
 gg_base +
 annotate(
   "rect",
@@ -528,7 +527,7 @@ annotate(
 
 .hi-pink[Predictions] cover each region (e.g. using the region's .hi-pink[most common class]).
 
-```{r, plot-split3f, echo = F, cache = T, dependson = c(-9), out.width = "88%"}
+```{r, plot-split3f, echo = F, cache = F, dependson = c(-9), out.width = "88%"}
 gg_base +
 annotate(
   "rect",
@@ -1239,7 +1238,7 @@ To train decision trees in R, we'll  use .hi-slate[tidymodels] (and several othe
 Let's first set the seed and define our cross-validation with `vfold_cv` from .hi-slate[rsample]
   * `v` the number of folds (here we'll use 5)
   
-```{r, cache = T}
+```{r, cache = F}
 # Define our CV split
 set.seed(12345)
 default_cv <- default_df %>% vfold_cv(v = 5)
@@ -1288,7 +1287,7 @@ default_flow <- workflow() %>%
 # Decision Trees in R
 
 Lastly, execute the workflow through cross-validation!
-```{r, train-decision-tree, cache = T}
+```{r, train-decision-tree, cache = F}
 # Tune!
 default_cv_fit <- default_flow %>% tune_grid(
   default_cv,
@@ -1296,14 +1295,36 @@ default_cv_fit <- default_flow %>% tune_grid(
     cost_complexity = seq(0, 0.15, by = 0.01),
     tree_depth = c(1, 2, 5, 10),
   ),
-  metrics = metric_set(accuracy, roc_auc)
+  metrics = metric_set(accuracy)
 )
 ```
 ---
 # Decision Trees in R
 
 Plotting 
-```{r}
+```{r, eval = F}
+ggplot(
+  data = default_cv_fit %>% collect_metrics() %>% filter(.metric == "accuracy"),
+  aes(
+    x = cost_complexity,
+    y = mean,
+    color = tree_depth %>% factor(levels = c(1,2,5,10), ordered = T),
+    shape = tree_depth %>% factor(levels = c(1,2,5,10), ordered = T)
+  )
+) +
+geom_line(linewidth = 0.4) +
+geom_point(size = 3, alpha = 0.8) +
+scale_y_continuous("Accuracy") +
+scale_x_continuous("Cost complexity") +
+scale_color_viridis_d("Tree depth") +
+scale_shape_manual("Tree depth", values = c(1, 18, 15, 20)) +
+theme_minimal(base_size = 16) +
+theme(legend.position = "bottom")
+```
+---
+# Decision Trees in R
+
+```{r, echo = F, out.width = "120%"}
 ggplot(
   data = default_cv_fit %>% collect_metrics() %>% filter(.metric == "accuracy"),
   aes(
@@ -1381,7 +1402,7 @@ We can compare this "best" tree to a less pruned/penalized tree
 ---
 # Decision Trees in R
 
-```{r, plot-tree_complex, echo = F}
+```{r, plot-tree_complex, echo = F, out.width = "120%"}
 tree_complex <- decision_tree(
   mode = "classification",
   cost_complexity = 0.005,
@@ -1684,7 +1705,7 @@ Training a random forest in R using .hi-slate[tidymodels] and .hi-slate[ranger]:
 
 
 .pull-right[
-```{r, ex-tidy-ranger, cache = T}
+```{r, ex-tidy-ranger, cache = F}
 # Define the random forest
 heart_rf <- rand_forest(
   mode = "classification",
@@ -1915,7 +1936,7 @@ heart_rf <- rand_forest(
 
 We can then build our workflow and fit the random forest:
 
-```{r, ex-tidy-ranger-fit, include = F, cache = T, dependson = -1}
+```{r, ex-tidy-ranger-fit, include = F, cache = F, dependson = -1}
 # Define workflow
 heart_rf_wf <- workflow() %>% 
   add_model(heart_rf) %>% 
@@ -2206,7 +2227,7 @@ Next time...
 
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = FALSE}
-infile = list.files(pattern = 'Sel.html')
-pagedown::chrome_print(input = infile, timeout = 400)
+infile = list.files(pattern = 'Trees.html')
+pagedown::chrome_print(input = infile, timeout = 600)
 ```
 
