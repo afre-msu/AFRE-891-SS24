@@ -9,7 +9,7 @@ output:
     css: [msu-default.css, msu-metropolis.css, metropolis-fonts]
     lib_dir: libs
     latex_engine: lualatex
-    self_contained: false
+    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true
@@ -186,9 +186,9 @@ $$E[\psi_{\theta(x), ~\nu(x)}(O_i~|~X_i = x)] = 0$$
 
   * $\nu(x)$ a (optional) nuisance parameter
   
---  
+<br>
 
-  * If conditional mean without noise, then $\psi_{\mu(x)}(Y_i) = Y_i - \mu(x)$
+If conditional mean without noise, then $\psi_{\mu(x)}(Y_i) = Y_i - \mu(x)$
 
 
 ---
@@ -474,8 +474,9 @@ Let's find out!
 We *could* just run an (interacted) OLS regression...
 .font90[
 ```{r}
+pacman::p_load(fixest, grf, tidyverse)
 reg1 <- feols(Y ~ Z + S3 + C1 + C2 + C3 + XC + X1 + X2 + X3 + X4 + X5, data  = nslm, vcov = "HC1")
-reg2 <- feols(Y ~ Z + Z:X2 + Z:X3 + S3 + C1 + C2 + C3 + XC + X1 + X2 + X3 + X4 + X5, data  = nslm, vcov = "HC1")
+reg2 <- feols(Y ~ Z + Z:X2 + Z:X1 + S3 + C1 + C2 + C3 + XC + X1 + X2 + X3 + X4 + X5, data  = nslm, vcov = "HC1")
 etable(reg1, reg2, keep = c("Z", "X2", "X1"))
 ```
 ]
@@ -642,7 +643,7 @@ cf <- causal_forest(X = Xmat,
                     W = Z, #<<
                     Y.hat = Y_hat,
                     W.hat = W_hat,
-                    clusters = nslm$schoolid,
+                    clusters = schoolid,
                     equalize.cluster.weights = TRUE,
                     num.trees = 2000,
                     honesty = TRUE,
@@ -676,7 +677,7 @@ cf <- causal_forest(X = Xmat,
                     W = Z, 
                     Y.hat = Y_hat, #<<
                     W.hat = W_hat, #<<
-                    clusters = nslm$schoolid,
+                    clusters = schoolid,
                     equalize.cluster.weights = TRUE,
                     num.trees = 200,
                     honesty = TRUE,
@@ -707,7 +708,7 @@ cf <- causal_forest(X = Xmat,
                     W = Z, 
                     Y.hat = Y_hat,
                     W.hat = W_hat,
-                    clusters = nslm$schoolid, #<<
+                    clusters = schoolid, #<<
                     equalize.cluster.weights = TRUE, #<<
                     num.trees = 200,
                     honesty = TRUE,
@@ -738,7 +739,7 @@ cf <- causal_forest(X = Xmat,
                     W = Z, 
                     Y.hat = Y_hat,
                     W.hat = W_hat,
-                    clusters = nslm$schoolid, 
+                    clusters = schoolid, 
                     equalize.cluster.weights = TRUE, 
                     num.trees = 200, #<<
                     honesty = TRUE,
@@ -769,7 +770,7 @@ cf <- causal_forest(X = Xmat,
                     W = Z, 
                     Y.hat = Y_hat,
                     W.hat = W_hat,
-                    clusters = nslm$schoolid, 
+                    clusters = schoolid, 
                     equalize.cluster.weights = TRUE, 
                     num.trees = 200, 
                     honesty = TRUE, #<<
@@ -799,7 +800,7 @@ cf <- causal_forest(X = Xmat,
                     W = Z, 
                     Y.hat = Y_hat,
                     W.hat = W_hat,
-                    clusters = nslm$schoolid, 
+                    clusters = schoolid, 
                     equalize.cluster.weights = TRUE, 
                     num.trees = 200, 
                     honesty = TRUE, 
@@ -1055,7 +1056,7 @@ Looking at the .hi-medgrn[Test Calibration] results for each forest shows the im
 ---
 # Test Calibration
 
-First for the non-clustered forest:
+First for the clustered forest:
 
 ```{r}
 test_calibration(cf_sel)
@@ -1120,7 +1121,7 @@ etable(x2_reg)
 ---
 # Simulations
 
-.hi-medgrn[Solution:] use a new "simulated" covariate matrix to predict treatment effects if schools had different achievement levels, holding other characteristics fixed.
+.hi-medgrn[Potential solution:] use a new "simulated" covariate matrix to predict treatment effects if schools had different achievement levels, holding other characteristics fixed.
 
 --
 
@@ -1130,19 +1131,10 @@ Let's write a function that will let us obtain treatment effect predictions if w
 ```{r, eval = F}
 sim_x2 <- function(val){
   # replace all X2 values in the Xmat with the specified value
-  X <- mutate(Xmat, X2 = val)
-  
-  # Estimate forest
-  cf_sim <- causal_forest(X = X_sel, 
-                    Y = Y, 
-                    W = Z, 
-                    num.trees = 200, # fewer trees for expediency of estimation
-                    honesty = TRUE,
-                    honesty.fraction = 0.5,
-                    tune.parameters = "all" 
-                    )
-  
-  res <- data.frame(preds = predict(cf_sim)$predictions) %>%
+  X_sim <- mutate(X_sel, X2 = val)
+ 
+  # predict using the trained forest with the new data
+  res <- data.frame(preds = predict(cf_sel, newdata = X_sim)$predictions) %>%
     mutate(X2_val = val)
   return(res)
 }
@@ -1166,25 +1158,27 @@ And running:
 
 ```{r, eval = F}
 # Vectorizing and saving out
-sim_x2 <- map_dfr(x2_seq, sim_x2)
-saveRDS(sim_x2, "output/x2_sim_df.rds")
+tic()
+sim_x2_df <- map_dfr(x2_seq, sim_x2)
+toc()
+saveRDS(sim_x2_df, "F:/OneDrive - Michigan State University/Teaching/MSU 2023-2024/AFRE 891 SS24/Lecture-Slides/11-ML/output/x2_sim_df.rds")
 ```
 
 ---
 # Simulations
 
-Plotting the simulation results:
+Plotting the results suggests that other factors changing play important roles in the treatment effect too (changing `X2` in isolation not sufficient)
 
 ```{r sim-plot, echo = F, out.width = "80%"}
 # Reading in the finished file, getting objects out
-sim_x2 <- readRDS("output/x2_sim_df.rds")
+sim_x2_df <- readRDS("output/x2_sim_df.rds")
 
 min_x2 <- min(Xmat$X2)%>% round(2)
 max_x2 <- max(Xmat$X2) %>% round(2)
 x2_seq <- seq(min_x2, max_x2, length.out = 20)
 
 # Plotting
-ggplot(data = sim_x2, aes(x = factor(X2_val), y =preds)) +
+ggplot(data = sim_x2_df, aes(x = factor(X2_val), y =preds)) +
   geom_boxplot() +
   theme_minimal() +
   scale_x_discrete(breaks = seq(min_x2, max_x2, length.out = 20)[seq(1,20,2)],
@@ -1334,7 +1328,7 @@ To estimate a local linear causal forest:
 ```{r ll-caus}
 cf_sel_ll <- causal_forest(
   # unchanged parameters:
-  X = X_sel, Y = Y, W = Z, clusters = nslm$schoolid, equalize.cluster.weights = TRUE, num.trees = 2000, honesty = TRUE, honesty.fraction = 0.5,  tune.parameters = "all",
+  X = X_sel, Y = Y, W = Z, clusters = schoolid, equalize.cluster.weights = TRUE, num.trees = 2000, honesty = TRUE, honesty.fraction = 0.5,  tune.parameters = "all",
   # changed inputs:
                     Y.hat = Y_ll_hat, #<<
                     W.hat = W_ll_hat, #<<
